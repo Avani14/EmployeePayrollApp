@@ -2,6 +2,7 @@ package com.bridgelabz.employeepayrollapp.entity;
 
 import java.util.List;
 
+
 public class Employee {
     private long id;
     private String name;
@@ -56,5 +57,24 @@ public class Employee {
 
     public void setDepartment(List<String> department) {
         this.department = department;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", salary=" + salary +
+                ", gender='" + gender + '\'' +
+                ", start_date='" + start_date + '\'' +
+                ", department=" + department +
+                '}';
+    }
+    public void updateEmployee(Employee employee){
+        this.name = employee.getName();
+        this.gender = employee.getGender();
+        this.salary = employee.getSalary();
+        this.start_date = employee.getStart_date();
+        this.department = employee.getDepartment();
     }
 }
