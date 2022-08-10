@@ -8,8 +8,8 @@ import java.util.List;
 public interface IEmployeePayrollService {
     String welcomeMessageForEmployee(Employee employee);
     String welcomeMessage();
-    Employee addEmployeeMessage(Employee employee);
-    Employee editEmployeeMessage(long id,Employee employee);
+    Employee addEmployeeMessage(EmployeeDTO employee);
+    Employee editEmployeeMessage(long id,EmployeeDTO employee);
 
     String deleteEmployeeMessage(long id);
 
