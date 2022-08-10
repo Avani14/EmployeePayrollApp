@@ -1,14 +1,22 @@
 package com.bridgelabz.employeepayrollapp.service;
 
 import com.bridgelabz.employeepayrollapp.entity.Employee;
+import com.bridgelabz.employeepayrollapp.repository.EmployeeRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Slf4j
 public class EmployeePayrollService implements IEmployeePayrollService{
     HashMap<Long,Employee> employeePayrollRecord = new HashMap<Long,Employee>();
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     @Override
     public String welcomeMessage() {
@@ -16,38 +24,38 @@ public class EmployeePayrollService implements IEmployeePayrollService{
     }
 
     @Override
-    public String addEmployeeMessage(Employee employee) {
-        employeePayrollRecord.put(employee.getId(),employee);
-        System.out.println(employeePayrollRecord);
-        return "Employee Name: "+employee.getName()+" ID: "+employee.getId()+" added successfully";
+    public Employee addEmployeeMessage(Employee employee) {
+        log.info("Employee data: "+employee);
+        return employeeRepository.save(employee);
     }
 
     @Override
-    public String editEmployeeMessage(long id,Employee employee) {
-        Employee employee1 = employeePayrollRecord.get(id);
-        employee1.updateEmployee(employee);
-        System.out.println(employeePayrollRecord);
-        return "The employee with id: "+ id+" is updated successfully";
+    public Employee editEmployeeMessage(long id,Employee employee) {
+        Optional<Employee> employee1 = employeeRepository.findById(id);
+        employee1.get().setName(employee.getName());
+        employee1.get().setGender(employee.getGender());
+        employee1.get().setSalary(employee.getSalary());
+        return employeeRepository.save(employee1.get());
     }
 
     @Override
     public String deleteEmployeeMessage(long id) {
-        employeePayrollRecord.remove(id);
-        System.out.println(employeePayrollRecord);
+        employeeRepository.deleteById(id);
         return "The employee with id: "+ id+" is deleted successfully";
     }
 
     @Override
     public List<Employee> getAllEmployeeMessage() {
-        System.out.println("All Employee's details are :\n ");
-        List<Employee> employeeList = employeePayrollRecord.entrySet().stream().map(employee->employee.getValue()).toList();
-        return employeeList;
+//        System.out.println("All Employee's details are :\n ");
+//        List<Employee> employeeList = employeePayrollRecord.entrySet().stream().map(employee->employee.getValue()).toList();
+        return employeeRepository.findAll();
     }
 
+
     @Override
-    public Employee getAllEmployeeByIDMessage(long id) {
-        Employee employee = employeePayrollRecord.get(id);
-        return employee;
+    public Employee getEmployeeByIDMessage(long id) {
+//        Employee employee = employeePayrollRecord.get(id);
+        return employeeRepository.findById(id).get();
     }
 
     @Override

@@ -1,80 +1,28 @@
 package com.bridgelabz.employeepayrollapp.entity;
 
+import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import javax.persistence.*;
 import java.util.List;
 
-
+@Entity
+@Table(name = "Employee")
+@Data
+@ToString
+@NoArgsConstructor
 public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
     private long salary;
     private String gender;
     private String start_date;
+    @ElementCollection
     private List<String> department;
 
-    public long getId() {
-        return id;
-    }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public long getSalary() {
-        return salary;
-    }
-
-    public void setSalary(long salary) {
-        this.salary = salary;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getStart_date() {
-        return start_date;
-    }
-
-    public void setStart_date(String start_date) {
-        this.start_date = start_date;
-    }
-
-    public List<String> getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(List<String> department) {
-        this.department = department;
-    }
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", salary=" + salary +
-                ", gender='" + gender + '\'' +
-                ", start_date='" + start_date + '\'' +
-                ", department=" + department +
-                '}';
-    }
-    public void updateEmployee(Employee employee){
-        this.name = employee.getName();
-        this.gender = employee.getGender();
-        this.salary = employee.getSalary();
-        this.start_date = employee.getStart_date();
-        this.department = employee.getDepartment();
-    }
 }
