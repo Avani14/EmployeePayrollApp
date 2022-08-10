@@ -1,6 +1,7 @@
 package com.bridgelabz.employeepayrollapp.controller;
 
 import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
+import com.bridgelabz.employeepayrollapp.dto.ResponseDTO;
 import com.bridgelabz.employeepayrollapp.entity.Employee;
 import com.bridgelabz.employeepayrollapp.service.IEmployeePayrollService;
 import org.modelmapper.ModelMapper;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,18 +33,18 @@ public class EmployeePayrollController {
         return employeePayrollService.welcomeMessageForEmployee(employee);
     }
     @PostMapping("/addEmployee")
-    public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO employeeDTO){
-        Employee employee = modelMapper.map(employeeDTO,Employee.class);
-        Employee emp = employeePayrollService.addEmployeeMessage(employee);
-        EmployeeDTO employeeDTO1 = modelMapper.map(emp,EmployeeDTO.class);
-        return new ResponseEntity<EmployeeDTO>(employeeDTO1, HttpStatus.CREATED);
+    public ResponseEntity<ResponseDTO> addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO){
+//        Employee employee = modelMapper.map(employeeDTO,Employee.class);
+        Employee emp = employeePayrollService.addEmployeeMessage(employeeDTO);
+        ResponseDTO responseDTO = new ResponseDTO("Employee added successfully!",emp);
+        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.CREATED);
     }
     @PutMapping("/editEmployee/{id}")
-    public ResponseEntity<EmployeeDTO> editEmployee(@RequestBody EmployeeDTO employeeDTO,@PathVariable long id){
-        Employee employee = modelMapper.map(employeeDTO,Employee.class);
-        Employee employee1 = employeePayrollService.editEmployeeMessage(id,employee);
-        EmployeeDTO employeeDTO1 = modelMapper.map(employee1,EmployeeDTO.class);
-        return ResponseEntity.ok().body(employeeDTO1);
+    public ResponseEntity<ResponseDTO> editEmployee(@RequestBody EmployeeDTO employeeDTO,@PathVariable long id){
+//        Employee employee = modelMapper.map(employeeDTO,Employee.class);
+        Employee emp = employeePayrollService.editEmployeeMessage(id,employeeDTO);
+        ResponseDTO responseDTO = new ResponseDTO("Employee edited successfully!",emp);
+        return ResponseEntity.ok().body(responseDTO);
     }
     @DeleteMapping("/deleteEmployee/{id}")
     public String deleteEmployee(@PathVariable long id){

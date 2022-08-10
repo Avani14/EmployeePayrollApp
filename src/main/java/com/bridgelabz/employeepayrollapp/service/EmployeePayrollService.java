@@ -1,5 +1,6 @@
 package com.bridgelabz.employeepayrollapp.service;
 
+import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
 import com.bridgelabz.employeepayrollapp.entity.Employee;
 import com.bridgelabz.employeepayrollapp.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -24,17 +25,19 @@ public class EmployeePayrollService implements IEmployeePayrollService{
     }
 
     @Override
-    public Employee addEmployeeMessage(Employee employee) {
-        log.info("Employee data: "+employee);
+    public Employee addEmployeeMessage(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee(employeeDTO);
         return employeeRepository.save(employee);
     }
 
     @Override
-    public Employee editEmployeeMessage(long id,Employee employee) {
+    public Employee editEmployeeMessage(long id,EmployeeDTO employeeDTO) {
+        Employee employee = new Employee(employeeDTO);
         Optional<Employee> employee1 = employeeRepository.findById(id);
         employee1.get().setName(employee.getName());
         employee1.get().setGender(employee.getGender());
         employee1.get().setSalary(employee.getSalary());
+        employee1.get().setDepartment(employee.getDepartment());
         return employeeRepository.save(employee1.get());
     }
 
