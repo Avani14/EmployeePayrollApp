@@ -2,8 +2,10 @@ package com.bridgelabz.employeepayrollapp.service;
 
 import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
 import com.bridgelabz.employeepayrollapp.entity.Employee;
+import com.bridgelabz.employeepayrollapp.exception.UserNotFound;
 import com.bridgelabz.employeepayrollapp.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +33,12 @@ public class EmployeePayrollService implements IEmployeePayrollService{
     }
 
     @Override
-    public Employee editEmployeeMessage(long id,EmployeeDTO employeeDTO) {
+    public Employee editEmployeeMessage(long id,EmployeeDTO employeeDTO) throws UserNotFound {
         Employee employee = new Employee(employeeDTO);
-        Optional<Employee> employee1 = employeeRepository.findById(id);
+        Optional<Employee> employee1 = Optional.ofNullable(employeeRepository.findById(id).orElse(null));
+        if(employee1 == null){
+            throw new UserNotFound("Employee with id "+id+" does not exists, please try again");
+        }
         employee1.get().setName(employee.getName());
         employee1.get().setGender(employee.getGender());
         employee1.get().setSalary(employee.getSalary());
@@ -56,9 +61,15 @@ public class EmployeePayrollService implements IEmployeePayrollService{
 
 
     @Override
-    public Employee getEmployeeByIDMessage(long id) {
+    public Employee getEmployeeByIDMessage(long id) throws UserNotFound {
 //        Employee employee = employeePayrollRecord.get(id);
-        return employeeRepository.findById(id).get();
+        Employee employee =  employeeRepository.findById(id).orElse(null);
+        if(employee == null){
+            throw new UserNotFound("Employee of id: "+id+" not found");
+        }
+        else{
+            return employee;
+        }
     }
 
     @Override

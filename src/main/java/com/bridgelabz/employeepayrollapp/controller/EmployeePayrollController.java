@@ -3,6 +3,7 @@ package com.bridgelabz.employeepayrollapp.controller;
 import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
 import com.bridgelabz.employeepayrollapp.dto.ResponseDTO;
 import com.bridgelabz.employeepayrollapp.entity.Employee;
+import com.bridgelabz.employeepayrollapp.exception.UserNotFound;
 import com.bridgelabz.employeepayrollapp.service.IEmployeePayrollService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class EmployeePayrollController {
         return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.CREATED);
     }
     @PutMapping("/editEmployee/{id}")
-    public ResponseEntity<ResponseDTO> editEmployee(@RequestBody EmployeeDTO employeeDTO,@PathVariable long id){
+    public ResponseEntity<ResponseDTO> editEmployee(@RequestBody EmployeeDTO employeeDTO,@PathVariable long id) throws UserNotFound{
 //        Employee employee = modelMapper.map(employeeDTO,Employee.class);
         Employee emp = employeePayrollService.editEmployeeMessage(id,employeeDTO);
         ResponseDTO responseDTO = new ResponseDTO("Employee edited successfully!",emp);
@@ -55,9 +56,9 @@ public class EmployeePayrollController {
         return employeePayrollService.getAllEmployeeMessage().stream().map(emp->modelMapper.map(emp,EmployeeDTO.class)).collect(Collectors.toList());
     }
     @GetMapping("/getEmployeeById/{id}")
-    public ResponseEntity<EmployeeDTO> getAllEmployeeByID(@PathVariable long id){
+    public ResponseEntity<ResponseDTO> getAllEmployeeByID(@PathVariable long id) throws UserNotFound {
         Employee employee = employeePayrollService.getEmployeeByIDMessage(id);
-        EmployeeDTO employeeDTO = modelMapper.map(employee,EmployeeDTO.class);
-        return ResponseEntity.ok().body(employeeDTO);
+        ResponseDTO responseDTO = new ResponseDTO("The Employee is:",employee);
+        return ResponseEntity.ok().body(responseDTO);
     }
 }
