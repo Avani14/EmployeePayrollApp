@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class EmployeePayrollAdvice {
@@ -22,11 +23,17 @@ public class EmployeePayrollAdvice {
         return errorMapping;
     }
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NoSuchElementException.class)
+    public Map<String, String> elementNotFound(NoSuchElementException noSuchElementException) {
+        Map<String, String> errorMapping = new HashMap<>();
+        errorMapping.put("error",noSuchElementException.getMessage());
+        return errorMapping;
+    }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(UserNotFound.class)
     public Map<String, String> userNotFount(UserNotFound userNotFound) {
         Map<String, String> errorMapping = new HashMap<>();
-        errorMapping.put("error-message",userNotFound.getMessage());
+        errorMapping.put("error",userNotFound.getMessage());
         return errorMapping;
     }
-
 }
