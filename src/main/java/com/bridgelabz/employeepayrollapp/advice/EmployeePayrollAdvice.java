@@ -36,4 +36,11 @@ public class EmployeePayrollAdvice {
         errorMapping.put("error",userNotFound.getMessage());
         return errorMapping;
     }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public Map<String, String> anyOtherError(Exception exception) {
+        Map<String, String> errorMapping = new HashMap<>();
+        errorMapping.put("error",exception.getMessage());
+        return errorMapping;
+    }
 }

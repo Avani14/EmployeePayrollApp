@@ -9,6 +9,8 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +45,7 @@ public class EmployeePayrollService implements IEmployeePayrollService{
         employee1.get().setGender(employee.getGender());
         employee1.get().setSalary(employee.getSalary());
         employee1.get().setDepartment(employee.getDepartment());
+        employee1.get().setStart_date(employee.getStart_date());
         return employeeRepository.save(employee1.get());
     }
 
@@ -70,6 +73,36 @@ public class EmployeePayrollService implements IEmployeePayrollService{
         else{
             return employee;
         }
+    }
+
+    @Override
+    public List<Employee> getEmployeeByDepartment(String department) {
+        return employeeRepository.getEmployeeByDepartment(department);
+    }
+
+    @Override
+    public List<Employee> getEmployeeByName(String name) {
+        return employeeRepository.getEmployeeByName(name);
+    }
+
+    @Override
+    public List<Employee> getEmployeeByGender(String gender) {
+        return employeeRepository.getEmployeeByGender(gender);
+    }
+
+    @Override
+    public List<Employee> getEmployeeBySalary(long min_salary, long max_salary) {
+        return employeeRepository.getEmployeeBySalary(min_salary,max_salary);
+    }
+
+    @Override
+    public List<Employee> getEmployeeByStartDate(Date start_Date, Date end_Date) {
+        return employeeRepository.getEmployeeByStart_date(start_Date,end_Date);
+    }
+
+    @Override
+    public List<Employee> getEmployeeByExactStartDate(Date start_Date) {
+        return employeeRepository.getEmployeeByExactStart_date(start_Date);
     }
 
     @Override

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.List;
 
 @Entity
@@ -20,7 +21,7 @@ public class Employee {
     private String name;
     private long salary;
     private String gender;
-    private String start_date;
+    private Date start_date;
     @ElementCollection
     @CollectionTable(joinColumns = @JoinColumn(name = "id", referencedColumnName = "id"))
     private List<String> department;
@@ -30,5 +31,6 @@ public class Employee {
         this.salary = employeeDTO.getSalary();
         this.gender = employeeDTO.getGender();
         this.department = employeeDTO.getDepartment();
+        this.start_date = employeeDTO.getStart_date();
     }
 }
