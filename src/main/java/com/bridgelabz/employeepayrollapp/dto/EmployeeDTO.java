@@ -18,13 +18,17 @@ import java.util.List;
 public class EmployeeDTO {
     @Pattern(regexp = "^[A-Z]{1}[a-z]{2,}",message = "Please enter valid name")
     private String name;
-    @Pattern(regexp = "male|female|other",message = "Please enter valid gender")
-    private String gender;
     @Min(50)
     private long salary;
     @NotNull
-    private List<String> department;
+    private String email;
+    @NotNull
+    private String password;
+    @Pattern(regexp = "male|female|other",message = "Please enter valid gender")
+    private String gender;
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date start_date;
+    @NotNull
+    private List<String> department;
 }

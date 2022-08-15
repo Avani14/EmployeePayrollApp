@@ -20,6 +20,10 @@ public class Employee {
     private long id;
     private String name;
     private long salary;
+
+    private String email;
+
+    private String password;
     private String gender;
     private Date start_date;
     @ElementCollection
@@ -32,5 +36,7 @@ public class Employee {
         this.gender = employeeDTO.getGender();
         this.department = employeeDTO.getDepartment();
         this.start_date = employeeDTO.getStart_date();
+        this.email = employeeDTO.getEmail();
+        this.password = employeeDTO.getPassword();
     }
 }

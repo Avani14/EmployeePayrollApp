@@ -5,12 +5,11 @@ import com.bridgelabz.employeepayrollapp.entity.Employee;
 import com.bridgelabz.employeepayrollapp.exception.UserNotFound;
 import com.bridgelabz.employeepayrollapp.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +22,8 @@ public class EmployeePayrollService implements IEmployeePayrollService{
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
     public String welcomeMessage() {
         return "Welcome";
@@ -30,6 +31,7 @@ public class EmployeePayrollService implements IEmployeePayrollService{
 
     @Override
     public Employee addEmployeeMessage(EmployeeDTO employeeDTO) {
+        employeeDTO.setPassword(bCryptPasswordEncoder.encode(employeeDTO.getPassword()));
         Employee employee = new Employee(employeeDTO);
         return employeeRepository.save(employee);
     }
@@ -42,6 +44,8 @@ public class EmployeePayrollService implements IEmployeePayrollService{
             throw new UserNotFound("Employee with id "+id+" does not exists, please try again");
         }
         employee1.get().setName(employee.getName());
+        employee1.get().setPassword(bCryptPasswordEncoder.encode(employee.getPassword()));
+        employee1.get().setEmail(employee.getEmail());
         employee1.get().setGender(employee.getGender());
         employee1.get().setSalary(employee.getSalary());
         employee1.get().setDepartment(employee.getDepartment());
