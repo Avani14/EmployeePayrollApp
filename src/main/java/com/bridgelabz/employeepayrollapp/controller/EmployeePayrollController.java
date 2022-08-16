@@ -102,7 +102,7 @@ public class EmployeePayrollController {
         ResponseDTO responseDTO = new ResponseDTO("The Employees who are :"+start_Date,employeeList);
         return ResponseEntity.ok().body(responseDTO);
     }
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<ResponseDTO> login(@RequestParam String email,@RequestParam String password) {
         Employee employee = employeePayrollService.login(email,password);
         ResponseDTO responseDTO = new ResponseDTO("Login Successfull",employee);
