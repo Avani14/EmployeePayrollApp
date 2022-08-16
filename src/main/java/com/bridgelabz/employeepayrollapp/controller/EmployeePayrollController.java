@@ -1,10 +1,12 @@
 package com.bridgelabz.employeepayrollapp.controller;
 
 import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
+import com.bridgelabz.employeepayrollapp.dto.LoginDTO;
 import com.bridgelabz.employeepayrollapp.dto.ResponseDTO;
 import com.bridgelabz.employeepayrollapp.entity.Employee;
 import com.bridgelabz.employeepayrollapp.exception.UserNotFound;
 import com.bridgelabz.employeepayrollapp.service.IEmployeePayrollService;
+import com.bridgelabz.employeepayrollapp.utility.TokenUtility;
 import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +42,14 @@ public class EmployeePayrollController {
         return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.CREATED);
     }
     @PutMapping("/editEmployee/{id}")
-    public ResponseEntity<ResponseDTO> editEmployee(@RequestBody EmployeeDTO employeeDTO,@PathVariable long id) throws UserNotFound{
+    public ResponseEntity<ResponseDTO> editEmployee(@RequestBody EmployeeDTO employeeDTO,@PathVariable String id) throws UserNotFound{
 //        Employee employee = modelMapper.map(employeeDTO,Employee.class);
         Employee emp = employeePayrollService.editEmployeeMessage(id,employeeDTO);
         ResponseDTO responseDTO = new ResponseDTO("Employee edited successfully!",emp);
         return ResponseEntity.ok().body(responseDTO);
     }
     @DeleteMapping("/deleteEmployee/{id}")
-    public String deleteEmployee(@PathVariable long id){
+    public String deleteEmployee(@PathVariable String id){
          return  employeePayrollService.deleteEmployeeMessage(id);
     }
     @GetMapping("/getEmployee")
@@ -61,7 +63,7 @@ public class EmployeePayrollController {
         return ResponseEntity.ok().body(responseDTO);
     }
     @GetMapping("/getEmployeeById/{id}")
-    public ResponseEntity<ResponseDTO> getAllEmployeeByID(@PathVariable long id) throws UserNotFound {
+    public ResponseEntity<ResponseDTO> getAllEmployeeByID(@PathVariable String id) throws UserNotFound {
         Employee employee = employeePayrollService.getEmployeeByIDMessage(id);
         ResponseDTO responseDTO = new ResponseDTO("The Employee is:",employee);
         return ResponseEntity.ok().body(responseDTO);
@@ -103,9 +105,7 @@ public class EmployeePayrollController {
         return ResponseEntity.ok().body(responseDTO);
     }
     @PostMapping("/login")
-    public ResponseEntity<ResponseDTO> login(@RequestParam String email,@RequestParam String password) {
-        Employee employee = employeePayrollService.login(email,password);
-        ResponseDTO responseDTO = new ResponseDTO("Login Successfull",employee);
-        return ResponseEntity.ok().body(responseDTO);
+    public String login(@RequestBody LoginDTO loginDTO) {
+        return employeePayrollService.login(loginDTO);
     }
 }

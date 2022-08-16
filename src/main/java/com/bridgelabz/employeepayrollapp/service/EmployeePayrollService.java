@@ -1,9 +1,11 @@
 package com.bridgelabz.employeepayrollapp.service;
 
 import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
+import com.bridgelabz.employeepayrollapp.dto.LoginDTO;
 import com.bridgelabz.employeepayrollapp.entity.Employee;
 import com.bridgelabz.employeepayrollapp.exception.UserNotFound;
 import com.bridgelabz.employeepayrollapp.repository.EmployeeRepository;
+import com.bridgelabz.employeepayrollapp.utility.TokenUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +23,8 @@ public class EmployeePayrollService implements IEmployeePayrollService{
 
     @Autowired
     private EmployeeRepository employeeRepository;
-
+    @Autowired
+    private TokenUtility tokenUtility;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
@@ -37,9 +40,9 @@ public class EmployeePayrollService implements IEmployeePayrollService{
     }
 
     @Override
-    public Employee editEmployeeMessage(long id,EmployeeDTO employeeDTO) throws UserNotFound {
+    public Employee editEmployeeMessage(String id,EmployeeDTO employeeDTO) throws UserNotFound {
         Employee employee = new Employee(employeeDTO);
-        Optional<Employee> employee1 = Optional.ofNullable(employeeRepository.findById(id).orElse(null));
+        Optional<Employee> employee1 = Optional.ofNullable(employeeRepository.findById(tokenUtility.decodePassword(id)).orElse(null));
         if(employee1 == null){
             throw new UserNotFound("Employee with id "+id+" does not exists, please try again");
         }
@@ -54,8 +57,8 @@ public class EmployeePayrollService implements IEmployeePayrollService{
     }
 
     @Override
-    public String deleteEmployeeMessage(long id) {
-        employeeRepository.deleteById(id);
+    public String deleteEmployeeMessage(String id) {
+        employeeRepository.deleteById(tokenUtility.decodePassword(id));
         return "The employee with id: "+ id+" is deleted successfully";
     }
 
@@ -68,11 +71,11 @@ public class EmployeePayrollService implements IEmployeePayrollService{
 
 
     @Override
-    public Employee getEmployeeByIDMessage(long id) throws UserNotFound {
+    public Employee getEmployeeByIDMessage(String id) throws UserNotFound {
 //        Employee employee = employeePayrollRecord.get(id);
-        Employee employee =  employeeRepository.findById(id).orElse(null);
+        Employee employee =  employeeRepository.findById(tokenUtility.decodePassword(id)).orElse(null);
         if(employee == null){
-            throw new UserNotFound("Employee of id: "+id+" not found");
+            throw new UserNotFound("Employee of id: "+tokenUtility.decodePassword(id)+" not found");
         }
         else{
             return employee;
@@ -110,11 +113,14 @@ public class EmployeePayrollService implements IEmployeePayrollService{
     }
 
     @Override
-    public Employee login(String email, String password) {
-        return employeeRepository.getEmployeeByEmail(email,password);
+    public String login(LoginDTO loginDTO) {
+       Employee employee =  employeeRepository.findById(loginDTO.getUserID()).orElse(null);
+       if(employee == null){
+           return "Invalid credentials.";
+       }
+       return tokenUtility.createToken(loginDTO.getUserID());
     }
 
-    @Override
     public String welcomeMessageForEmployee(Employee employee) {
         employeePayrollRecord.put(employee.getId(),employee);
         System.out.println(employeePayrollRecord);

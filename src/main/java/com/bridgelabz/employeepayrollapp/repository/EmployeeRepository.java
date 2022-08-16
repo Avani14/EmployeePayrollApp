@@ -27,4 +27,7 @@ public interface EmployeeRepository extends JpaRepository<Employee,Long> {
     public Employee getEmployeeByEmail(String email,String password);
     @Query(value = "select * from employee,employee_department where employee.id = employee_department.id and email = :email",nativeQuery = true)
     public Employee getEmployeeByOnlyEmail(String email);
+
+    @Query(value = "select password from employee,employee_department where employee.id = employee_department.id and employee.id = :id",nativeQuery = true)
+    public String getEmployeeByPassword(long id);
 }
