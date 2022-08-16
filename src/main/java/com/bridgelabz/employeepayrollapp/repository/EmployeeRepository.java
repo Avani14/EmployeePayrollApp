@@ -23,6 +23,8 @@ public interface EmployeeRepository extends JpaRepository<Employee,Long> {
     public List<Employee> getEmployeeByGender(String gender);
     @Query(value = "select * from employee,employee_department where employee.id = employee_department.id and employee.start_date = :start_Date",nativeQuery = true)
     public List<Employee> getEmployeeByExactStart_date(Date start_Date);
+    @Query(value = "select * from employee,employee_department where employee.id = employee_department.id and email = :email and password = :password",nativeQuery = true)
+    public Employee getEmployeeByEmail(String email,String password);
     @Query(value = "select * from employee,employee_department where employee.id = employee_department.id and email = :email",nativeQuery = true)
-    public Employee getEmployeeByEmail(String email);
+    public Employee getEmployeeByOnlyEmail(String email);
 }

@@ -25,4 +25,5 @@ public interface IEmployeePayrollService {
     List<Employee> getEmployeeBySalary(long min_salary,long max_salary);
     List<Employee> getEmployeeByStartDate(Date start_Date, Date end_Date);
     List<Employee> getEmployeeByExactStartDate(Date start_Date);
+    Employee login(String email,String password);
 }

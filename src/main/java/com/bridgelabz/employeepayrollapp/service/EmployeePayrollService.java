@@ -110,6 +110,11 @@ public class EmployeePayrollService implements IEmployeePayrollService{
     }
 
     @Override
+    public Employee login(String email, String password) {
+        return employeeRepository.getEmployeeByEmail(email,password);
+    }
+
+    @Override
     public String welcomeMessageForEmployee(Employee employee) {
         employeePayrollRecord.put(employee.getId(),employee);
         System.out.println(employeePayrollRecord);
