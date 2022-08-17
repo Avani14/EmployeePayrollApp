@@ -4,6 +4,7 @@ import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
 import com.bridgelabz.employeepayrollapp.dto.LoginDTO;
 import com.bridgelabz.employeepayrollapp.dto.ResponseDTO;
 import com.bridgelabz.employeepayrollapp.entity.Employee;
+import com.bridgelabz.employeepayrollapp.exception.MultipleEntries;
 import com.bridgelabz.employeepayrollapp.exception.UserNotFound;
 import com.bridgelabz.employeepayrollapp.service.IEmployeePayrollService;
 import com.bridgelabz.employeepayrollapp.utility.TokenUtility;
@@ -35,7 +36,7 @@ public class EmployeePayrollController {
     }
     @ApiOperation(value = "Add the Employee",notes = "This api will add the employee to the database if the entries are valid")
     @PostMapping("/addEmployee")
-    public ResponseEntity<ResponseDTO> addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO){
+    public ResponseEntity<ResponseDTO> addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) throws MultipleEntries {
 //        Employee employee = modelMapper.map(employeeDTO,Employee.class);
         Employee emp = employeePayrollService.addEmployeeMessage(employeeDTO);
         ResponseDTO responseDTO = new ResponseDTO("Employee added successfully!",emp);

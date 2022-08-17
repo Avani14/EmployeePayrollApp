@@ -3,6 +3,7 @@ package com.bridgelabz.employeepayrollapp.service;
 import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
 import com.bridgelabz.employeepayrollapp.dto.LoginDTO;
 import com.bridgelabz.employeepayrollapp.entity.Employee;
+import com.bridgelabz.employeepayrollapp.exception.MultipleEntries;
 import com.bridgelabz.employeepayrollapp.exception.UserNotFound;
 import com.bridgelabz.employeepayrollapp.repository.EmployeeRepository;
 import com.bridgelabz.employeepayrollapp.utility.TokenUtility;
@@ -33,7 +34,10 @@ public class EmployeePayrollService implements IEmployeePayrollService{
     }
 
     @Override
-    public Employee addEmployeeMessage(EmployeeDTO employeeDTO) {
+    public Employee addEmployeeMessage(EmployeeDTO employeeDTO) throws MultipleEntries {
+        if(employeeRepository.getEmployeeByOnlyEmail(employeeDTO.getEmail()) != null){
+            throw new MultipleEntries("Employee with email id "+employeeDTO.getEmail()+" present.");
+        }
         employeeDTO.setPassword(bCryptPasswordEncoder.encode(employeeDTO.getPassword()));
         Employee employee = new Employee(employeeDTO);
         return employeeRepository.save(employee);
@@ -116,7 +120,7 @@ public class EmployeePayrollService implements IEmployeePayrollService{
     public String login(LoginDTO loginDTO) {
        Employee employee =  employeeRepository.getEmployeeByOnlyEmail(loginDTO.getUserID());
         System.out.println(bCryptPasswordEncoder.matches(loginDTO.getPassword(),employee.getPassword()));
-        if(loginDTO.getUserID().equals(employee.getEmail())){
+        if(employeeRepository.getEmployeeByOnlyEmail(loginDTO.getUserID()) != null){
             if(bCryptPasswordEncoder.matches(loginDTO.getPassword(),employee.getPassword())) {
                  return tokenUtility.createToken(loginDTO.getUserID());
             }

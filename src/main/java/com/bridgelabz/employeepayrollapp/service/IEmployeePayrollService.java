@@ -3,6 +3,7 @@ package com.bridgelabz.employeepayrollapp.service;
 import com.bridgelabz.employeepayrollapp.dto.EmployeeDTO;
 import com.bridgelabz.employeepayrollapp.dto.LoginDTO;
 import com.bridgelabz.employeepayrollapp.entity.Employee;
+import com.bridgelabz.employeepayrollapp.exception.MultipleEntries;
 import com.bridgelabz.employeepayrollapp.exception.UserNotFound;
 
 import java.sql.Date;
@@ -14,7 +15,7 @@ public interface IEmployeePayrollService {
 
     String welcomeMessageForEmployee(Employee employee);
     String welcomeMessage();
-    Employee addEmployeeMessage(EmployeeDTO employee);
+    Employee addEmployeeMessage(EmployeeDTO employee) throws MultipleEntries;
     Employee editEmployeeMessage(String id,EmployeeDTO employee) throws UserNotFound;
 
     String deleteEmployeeMessage(String id);

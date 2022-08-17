@@ -1,7 +1,9 @@
 package com.bridgelabz.employeepayrollapp.advice;
 
+import com.bridgelabz.employeepayrollapp.exception.MultipleEntries;
 import com.bridgelabz.employeepayrollapp.exception.UserNotFound;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,6 +37,13 @@ public class EmployeePayrollAdvice {
         Map<String, String> errorMapping = new HashMap<>();
         errorMapping.put("error",userNotFound.getMessage());
         return errorMapping;
+    }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(MultipleEntries.class)
+    public ResponseEntity<Map<String ,String>> userNotFount(MultipleEntries multipleEntries) {
+        Map<String, String> errorMapping = new HashMap<>();
+        errorMapping.put("error",multipleEntries.getMessage());
+        return ResponseEntity.ok().body(errorMapping);
     }
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
