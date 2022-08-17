@@ -114,11 +114,15 @@ public class EmployeePayrollService implements IEmployeePayrollService{
 
     @Override
     public String login(LoginDTO loginDTO) {
-       Employee employee =  employeeRepository.findById(loginDTO.getUserID()).orElse(null);
-       if(employee == null){
-           return "Invalid credentials.";
+       Employee employee =  employeeRepository.getEmployeeByOnlyEmail(loginDTO.getUserID());
+        System.out.println(bCryptPasswordEncoder.matches(loginDTO.getPassword(),employee.getPassword()));
+        if(loginDTO.getUserID().equals(employee.getEmail())){
+            if(bCryptPasswordEncoder.matches(loginDTO.getPassword(),employee.getPassword())) {
+                 return tokenUtility.createToken(loginDTO.getUserID());
+            }
+
        }
-       return tokenUtility.createToken(loginDTO.getUserID());
+        return "Invalid credentials.";
     }
 
     public String welcomeMessageForEmployee(Employee employee) {

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TokenUtility {
     private static final String TOKEN_SECRET = "Bridgelabz";
-    public String createToken(long id){
+    public String createToken(String id){
         try {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             String token = JWT.create()
